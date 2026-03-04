@@ -1,4 +1,5 @@
 ## Smart Video Monitoring (KVS + Rekognition + OpenSearch)
+**Work-in-progress**
 
 Built from an AWS workshop reference architecture, with personal extensions:
 - (Planned) Search supports time-range filters and confidence threshold.
