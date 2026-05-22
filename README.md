@@ -69,7 +69,23 @@ Fig. 5 - OpenSearch Output Tab
 
 ![OpenSearch Root Endpoint](./docs/images/opensearch-root-endpoint.png "OpenSearch Root Endpoint")
 
-Fig. 5 - OpenSearch Root Endpoint
+Fig. 6 - OpenSearch Root Endpoint
+
+### Kinesis Video Streams setup
+
+The next phase of the project establishes the video ingestion layer using Amazon Kinesis Video Streams (KVS) and WebRTC.
+
+A signaling channel was created to support WebRTC communication between the local camera source and AWS-managed streaming services.
+
+![KVS Signaling Channel](./docs/images/create-signaling-channel.png "KVS Signaling Channel")
+
+Fig. 7 - Creating the `StreamChannel` signaling channel for WebRTC communication.
+
+A dedicated Kinesis Video Stream was also created for persistent video ingestion and later AI/ML analysis.
+
+![KVS Video Stream](./docs/images/create-video-stream.png "KVS Video Stream")
+
+Fig. 8 - Creating the `WebRTCStream` Kinesis Video Stream for stored video ingestion.
 
 ### Planned Enhancements
 - Add time-range and confidence-based filtering to search API
