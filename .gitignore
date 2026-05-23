@@ -1,0 +1,73 @@
+# =========================
+# Node / Frontend
+# =========================
+node_modules/
+dist/
+build/
+coverage/
+
+# Vite
+vite.svg
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# OS / Editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# =========================
+# AWS / Cloud
+# =========================
+.aws/
+cdk.out/
+
+# SAM / Serverless
+.serverless/
+.aws-sam/
+
+# Terraform (future-safe)
+.terraform/
+*.tfstate
+*.tfstate.*
+
+# =========================
+# Python
+# =========================
+__pycache__/
+*.pyc
+
+# =========================
+# Testing
+# =========================
+playwright-report/
+test-results/
+
+# =========================
+# Temporary files
+# =========================
+*.tmp
+*.temp
+*.bak
+
+# =========================
+# Local runtime artifacts
+# =========================
+*.log
+
+# =========================
+# Optional:
+# Uncomment if you do NOT
+# want AWS screenshots public
+# =========================
+# docs/images/private/
