@@ -118,6 +118,12 @@ Fig. 11 - Mapping the Lambda execution role to the OpenSearch `all_access` role 
 **Observation:**
 The workshop architecture uses the `all_access` OpenSearch role for simplicity. A production implementation would instead use scoped permissions and least-privilege access controls.
 
+### Test Video Injestion
+
+![Application Stack Outputs](./docs/images/stream-test-success.png "Video Injestion Test Successful")
+
+Fig. 12 - Stored playback from `WebRTCStream-1`, confirming WebRTC camera input was successfully ingested and persisted in Kinesis Video Streams.
+
 ### Planned Enhancements
 - Add time-range and confidence-based filtering to search API
 - Implement cost-aware teardown and resource tagging strategy
