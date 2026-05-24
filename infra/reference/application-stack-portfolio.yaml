@@ -358,14 +358,16 @@ Resources:
             Action: sts:AssumeRole
       Path: "/"
       Policies:
-        - PolicyName: StatesExecutionPolicy
-          PolicyDocument:
-            Version: "2012-10-17"
-            Statement:
-              - Effect: Allow
-                Action:
-                  - lambda:InvokeFunction
-                Resource: !GetAtt KvsProcessorFunction.Arn
+      - PolicyName: StatesExecutionPolicy
+        PolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Action:
+                - lambda:InvokeFunction
+              Resource:
+                - !GetAtt KvsProcessorFunction.Arn
+                - !Sub "${KvsProcessorFunction.Arn}:*"
       Tags:
         - Key: Project
           Value: !Ref ProjectName
