@@ -21,6 +21,15 @@ export async function searchVideoDetections(
   const response = await fetch(url.toString());
 
   if (!response.ok) {
+    const errorText = await response.text();
+
+    if (
+      response.status === 404 &&
+      errorText.includes("index_not_found_exception")
+    ) {
+      return [];
+    }
+
     throw new Error(`Search failed: ${response.status} ${response.statusText}`);
   }
 
