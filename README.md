@@ -33,6 +33,8 @@ Fig. 1 - Creating a $20 monthly cost budget with alert thresholds.
 AWS budgets do not automatically stop resources. They only send alerts. Resources such as OpenSearch continue to incur charges until they are manually deleted.
 
 
+
+
 ### Creating the infrastructure
 The original workshop foundation template used AWS Cloud9, but Cloud9 is no longer available to new customers, so I adapted the setup to use a local development environment while keeping OpenSearch provisioned through CloudFormation.
 
@@ -118,6 +120,44 @@ Fig. 11 - Mapping the Lambda execution role to the OpenSearch `all_access` role 
 **Observation:**
 The workshop architecture uses the `all_access` OpenSearch role for simplicity. A production implementation would instead use scoped permissions and least-privilege access controls.
 
+### WebRTC test page credentials
+
+The Kinesis Video Streams WebRTC test page requires temporary AWS credentials because it runs in the browser and is not automatically authenticated to the AWS Console session.
+```
+https://awslabs.github.io/amazon-kinesis-video-streams-webrtc-sdk-js/examples/index.html
+```
+
+Temporary credentials can be exported from AWS CloudShell:
+
+```bash
+aws configure export-credentials --format env
+```
+This outputs values such as: 
+```bash
+export AWS_ACCESS_KEY_ID=...
+export AWS_SECRET_ACCESS_KEY=...
+export AWS_SESSION_TOKEN=...
+```
+
+These values are copied into the WebRTC test page configuration along with:
+```text
+Region: us-west-2
+Channel name: StreamChannel-1
+Stream name: WebRTCStream-1
+```
+
+The session token expires, so fresh values may be needed if the test page returns `ExpiredTokenException`
+
+### Step Function execution
+
+The Step Function is started with the following input:
+
+```json
+{
+  "doContinue": true
+}
+```
+
 ### Test Video Ingestion
 
 ![KVS Stored Playback](./docs/images/stream-test-success.png "KVS Stored Playback")
@@ -134,10 +174,52 @@ Fig. 13 - Successful Step Functions orchestration invoking the Kinesis Video Str
 
 Fig. 14 - Custom React frontend returning `Bird` detections indexed from Rekognition into OpenSearch, including confidence scores, timestamps, and source video clips.
 
-### Planned Enhancements
-- Add time-range and confidence-based filtering to search API
-- Implement cost-aware teardown and resource tagging strategy
-- Review and tighten infrastructure security (IAM + OpenSearch access policies)
+### End-to-end validation
+
+The pipeline successfully processed test video input through Kinesis Video Streams, extracted clips to S3, analyzed the clips with Amazon Rekognition, indexed detected labels into OpenSearch, and returned results through a custom React search frontend.
+
+### Planned improvement
+
+The next planned improvement is a custom responsive capture client that can act as the WebRTC master feed, replacing reliance on the AWS-hosted WebRTC test page for video capture.
+
+### Cost observations
+
+The complete proof-of-concept, including infrastructure setup, testing iterations, Rekognition analysis, and teardown validation, incurred approximately $0.35 USD during development.
+
+Short controlled executions and manual Step Function termination were used to minimize unnecessary AWS costs.
+
+### Cleanup / teardown
+To avoid ongoing charges, delete all CloudFormation stacks after testing is complete.
+
+Recommended cleanup order:
+1. Application stack
+2. Foundation/OpenSearch stack
+
+Also verify that:
+- Step Function executions are stopped
+- WebRTC master feeds are disconnected
+- S3 buckets do not contain unnecessary retained media
+
+### Technical challenges encountered
+
+During development, several integration issues were identified and resolved, including:
+- Step Functions IAM invoke permissions for Lambda versioned ARNs
+- Runtime compatibility differences between Node.js Lambda runtimes and bundled AWS SDK behavior
+- Kinesis Video Streams media ingestion configuration requirements
+- Time-window synchronization issues between stored KVS fragments and Lambda clip extraction
+- Temporary credential expiration during WebRTC test page usage
+
+## 👤 Author
+
+George Louie Conde  
+Software Developer  
+Calgary, AB  
+[LinkedIn](https://linkedin.com/in/glconde)  
+[GitHub](https://github.com/glconde)
+
+## License & Version
+This project is licensed under the MIT License.
+See the LICENSE file for details.
 
 ### Credits
 Based on an AWS Workshops tutorial; implemented and extended independently. Inspired by Lucy Wang’s beginner AWS project list.
