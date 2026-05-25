@@ -124,6 +124,10 @@ The workshop architecture uses the `all_access` OpenSearch role for simplicity. 
 
 Fig. 12 - Stored playback from `WebRTCStream-1`, confirming WebRTC camera input was successfully ingested and persisted in Kinesis Video Streams.
 
+![Successful Step Functions Orchestration](./docs/images/step-functions-task-suceeded.png "Successful Step Functions Orchestration")
+
+Fig. 13 - Successful Step Functions orchestration invoking the Kinesis Video Streams processing Lambda for clip extraction and downstream Rekognition analysis.
+
 ### Planned Enhancements
 - Add time-range and confidence-based filtering to search API
 - Implement cost-aware teardown and resource tagging strategy
