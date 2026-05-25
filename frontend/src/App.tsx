@@ -55,23 +55,19 @@ function App() {
             <tr>
               <th>Label</th>
               <th>Confidence</th>
-              <th>Timestamp</th>
-              <th>Raw</th>
+              <th>Offset</th>
+              <th>Detected Time</th>
+              <th>Clip</th>
             </tr>
           </thead>
           <tbody>
             {results.map((result, index) => (
-              <tr key={index}>
-                <td>{result.label ?? result.name ?? "Unknown"}</td>
-                <td>
-                  {typeof result.confidence === "number"
-                    ? result.confidence.toFixed(2)
-                    : "-"}
-                </td>
-                <td>{String(result.timestamp ?? "-")}</td>
-                <td>
-                  <pre>{JSON.stringify(result, null, 2)}</pre>
-                </td>
+              <tr key={`${result.videoClipName}-${result.offsetMs}-${index}`}>
+                <td>{result.name}</td>
+                <td>{result.confidence.toFixed(2)}%</td>
+                <td>{(result.offsetMs / 1000).toFixed(1)}s</td>
+                <td>{new Date(result.timestampMs).toLocaleString()}</td>
+                <td>{result.videoClipName}</td>
               </tr>
             ))}
           </tbody>

@@ -118,15 +118,21 @@ Fig. 11 - Mapping the Lambda execution role to the OpenSearch `all_access` role 
 **Observation:**
 The workshop architecture uses the `all_access` OpenSearch role for simplicity. A production implementation would instead use scoped permissions and least-privilege access controls.
 
-### Test Video Injestion
+### Test Video Ingestion
 
-![Application Stack Outputs](./docs/images/stream-test-success.png "Video Injestion Test Successful")
+![KVS Stored Playback](./docs/images/stream-test-success.png "KVS Stored Playback")
 
 Fig. 12 - Stored playback from `WebRTCStream-1`, confirming WebRTC camera input was successfully ingested and persisted in Kinesis Video Streams.
 
-![Successful Step Functions Orchestration](./docs/images/step-functions-task-suceeded.png "Successful Step Functions Orchestration")
+![Successful Step Functions Orchestration](./docs/images/step-functions-task-succeeded.png "Successful Step Functions Orchestration")
 
 Fig. 13 - Successful Step Functions orchestration invoking the Kinesis Video Streams processing Lambda for clip extraction and downstream Rekognition analysis.
+
+### Frontend Search Validation
+
+![Frontend Search](./docs/images/frontend-search.png "Frontend Search")
+
+Fig. 14 - Custom React frontend returning `Bird` detections indexed from Rekognition into OpenSearch, including confidence scores, timestamps, and source video clips.
 
 ### Planned Enhancements
 - Add time-range and confidence-based filtering to search API

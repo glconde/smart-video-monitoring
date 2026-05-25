@@ -1,52 +1,50 @@
 import { config } from "../config";
 
 export interface VideoSearchResult {
-  label?: string;
-  name?: string;
-  confidence?: number;
-  timestamp?: number | string;
-  s3Key?: string;
-  image?: string;
-  clip?: string;
-  [key: string]: unknown;
+  name: string;
+  confidence: number;
+  timestampMs: number;
+  offsetMs: number;
+  videoClipName: string;
+}
+
+interface OpenSearchHit {
+  _source: {
+    name: string;
+    confidence: string;
+    base_timestamp: number;
+    ts: string;
+    videoClipName: string;
+  };
+}
+
+interface OpenSearchResponse {
+  hits?: {
+    hits?: OpenSearchHit[];
+  };
 }
 
 export async function searchVideoDetections(
   query: string,
 ): Promise<VideoSearchResult[]> {
   const url = new URL(config.apiGatewayUrl);
-
   url.searchParams.set("q", query);
 
   const response = await fetch(url.toString());
 
   if (!response.ok) {
-    const errorText = await response.text();
-
-    if (
-      response.status === 404 &&
-      errorText.includes("index_not_found_exception")
-    ) {
-      return [];
-    }
-
     throw new Error(`Search failed: ${response.status} ${response.statusText}`);
   }
 
-  const data: unknown = await response.json();
+  const data = (await response.json()) as OpenSearchResponse;
 
-  if (Array.isArray(data)) {
-    return data as VideoSearchResult[];
-  }
-
-  if (
-    typeof data === "object" &&
-    data !== null &&
-    "results" in data &&
-    Array.isArray((data as { results: unknown }).results)
-  ) {
-    return (data as { results: VideoSearchResult[] }).results;
-  }
-
-  return [];
+  return (
+    data.hits?.hits?.map((hit) => ({
+      name: hit._source.name,
+      confidence: Number(hit._source.confidence),
+      timestampMs: hit._source.base_timestamp + Number(hit._source.ts),
+      offsetMs: Number(hit._source.ts),
+      videoClipName: hit._source.videoClipName,
+    })) ?? []
+  );
 }
