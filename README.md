@@ -217,7 +217,7 @@ Calgary, AB
 [LinkedIn](https://linkedin.com/in/glconde)  
 [GitHub](https://github.com/glconde)
 
-## License & Version
+## License
 This project is licensed under the MIT License.
 See the LICENSE file for details.
 

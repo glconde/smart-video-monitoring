@@ -38,7 +38,7 @@ Example output:
 |-------|-----|------------------|------------------|
 | Bird | 95.7% | 2.3s | test_1748137135046.mp4 |
 
-### Correlation to the Fulls System
+### Correlation to the Full System
 The frontend represents the final stage of the overall pipeline:
 ```text
 WebRTC Video Feed
@@ -52,3 +52,11 @@ WebRTC Video Feed
 ```
 
 The displayed results originate from labels detected by Amazon Rekognition after video clips are extracted and processed through the serverless workflow.
+
+## 👤 Author
+
+George Louie Conde  
+Software Developer  
+Calgary, AB  
+[LinkedIn](https://linkedin.com/in/glconde)  
+[GitHub](https://github.com/glconde)
