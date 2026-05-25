@@ -1,73 +1,54 @@
-# React + TypeScript + Vite
+### Frontend Search Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+The frontend application is a custom React + TypeScript client used to query video detections indexed into OpenSearch.
 
-Currently, two official plugins are available:
+#### User Input
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The frontend accepts a text query such as:
 
-## React Compiler
-
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
-
-## Expanding the ESLint configuration
-
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```text
+bird
+animal
+person
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+The query is sent to the backend search API through Amazon API Gateway.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Backend Search Flow
+```text
+Frontend
+→ API Gateway
+→ searchlambda
+→ OpenSearch
 ```
+
+The `searchlambda` function queries the `entities` index in OpenSearch and returns matching Rekognition detections.
+
+### Returned Results
+
+The frontend displays:
+- Detected label name
+- Confidence score
+- Detection timestamp
+- Offset within the processed clip
+- Source video clip name
+
+Example output:
+| Label | Confidence | Offset | Clip |
+|-------|-----|------------------|------------------|
+| Bird | 95.7% | 2.3s | test_1748137135046.mp4 |
+
+### Correlation to the Fulls System
+The frontend represents the final stage of the overall pipeline:
+```text
+WebRTC Video Feed
+→ Kinesis Video Streams
+→ Lambda Clip Extraction
+→ Amazon S3
+→ Amazon Rekognition
+→ OpenSearch Indexing
+→ API Gateway Search
+→ React Frontend
+```
+
+The displayed results originate from labels detected by Amazon Rekognition after video clips are extracted and processed through the serverless workflow.
