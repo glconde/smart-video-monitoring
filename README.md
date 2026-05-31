@@ -1,5 +1,5 @@
 ## Smart Video Monitoring (KVS + Rekognition + OpenSearch)
-**Work-in-progress**
+**End-to-end proof-of-concept completed; responsive capture client planned as future enhancement.**
 
 An automated video monitoring pipeline built on AWS that ingests video from a local camera, performs AI-based object detection, and indexes results for time-based search.
 
